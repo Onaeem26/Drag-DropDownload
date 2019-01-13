@@ -5,3 +5,7 @@ v1.0 - January 13th 2019
 - Populating a UITableView with simple model class and then using UITableViewDragDelegate to get the ball rolling. 
 - Making a UIView a drop destination for the drag items using UIDropInteractionDelegate.
 - Counting the number of items dropped on the destination view / and using UIDropInteractionDelegate methods. 
+
+Coming up next: 
+- Using custom model class using NSItemProviderWriting / NSItemProviderReading
+- Using URLSession to download the dropped data on the UIView. 
