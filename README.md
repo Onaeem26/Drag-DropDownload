@@ -10,7 +10,7 @@ UPDATE: January 20th 2019
 - Populated a table view with podcasts from iTunes Search API
 - Fetched the podcast collection name, feedURL as well as the podcast artwork.
 - set up a class for the model and used Codable, NSItemProviderWriting and NSItemProviderReading to create a custom item provider.Several Apple provided classes already conform to these protocols such as UIImage, UIColor, NSURL, NSAttributedString and NSString. However, in order to create a custom item provider wrapper for your own model class you need to conform to NSItemProviderWriting and NSItemProviderReading. 
-- We are sending our model object as 'KUTTypeData' by first encoding it to JSON (implemented in NSItemProviderWriting method) and then decoding it back to the model type (implemented in NSItemProviderReading method). For this encoding and decoding we are using Codable. 
+- We will be dragging our model object as 'KUTTypeData' by first encoding it to JSON (implemented in NSItemProviderWriting method) and then decoding it back to the model type (implemented in NSItemProviderReading method) when dropped. For this encoding and decoding we are using Codable. 
 When creating drag item, we are using item provider which is constructed by using the object of the model class 
         
         let podcastItem = PodcastModelData(collectionName: collectionName, feedURL: feedUrl, artworkURL100: artworkurl)
