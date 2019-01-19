@@ -18,8 +18,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         tv.dataSource = self
         tv.dragDelegate = self
         tv.dropDelegate = self
-        tv.dragInteractionEnabled = true
-        
+        tv.dragInteractionEnabled = true 
         return tv
     }()
     
@@ -34,33 +33,29 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         return circle
     }()
     
-    var itemsDroppedLabel: UILabel = {
-       let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .white
-        label.text = "0"
-        return label
-    }()
+  
     var model = Model()
+    var podcastItems = [podcastModelData]()
     var  itemDropped: Int = 0
     var cellid = "cellId"
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        fetchJSONData(searchQuery:"The Tech Guy")
         // Do any additional setup after loading the view, typically from a nib.
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellid)
-    
+        tableView.register(PodcastCellView.self, forCellReuseIdentifier: cellid)
+        title = "Podcasts"
+        
         view.addSubview(tableView)
         view.addSubview(circleView)
         view.bringSubviewToFront(circleView)
-        circleView.addSubview(itemsDroppedLabel)
         customEnableDropping(on: circleView, dropInteractionDelegate: self as UIDropInteractionDelegate)
-       
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Downloads", style: .plain, target: self, action: #selector(handleDetailedViewTapped))
         
         setupViews()
-       
+        
     }
     
     func setupViews() {
@@ -74,37 +69,84 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         circleView.heightAnchor.constraint(equalToConstant: 140).isActive = true
         circleView.widthAnchor.constraint(equalToConstant: 140).isActive = true
         
-        itemsDroppedLabel.topAnchor.constraint(equalTo: circleView.topAnchor, constant: 45).isActive = true
-        itemsDroppedLabel.rightAnchor.constraint(equalTo: circleView.rightAnchor, constant: -45).isActive = true
-        itemsDroppedLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        itemsDroppedLabel.widthAnchor.constraint(equalToConstant: 30).isActive = true
+ 
     }
     
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return model.productName.count
+        return podcastItems.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellid)!
-        cell.textLabel?.text = model.productName[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellid, for: indexPath) as! PodcastCellView
+        cell.podcastName.text = podcastItems[indexPath.row].collectionName
+        if let podcastImageURL = podcastItems[indexPath.row].artworkUrl100 {
+            cell.podcastImageView.loadImageFromURL(url:podcastImageURL)
+        }
         return cell
     }
     
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 124
+    }
     func customEnableDropping(on view: UIView, dropInteractionDelegate: UIDropInteractionDelegate) {
         let dropInteraction = UIDropInteraction(delegate: dropInteractionDelegate)
         view.addInteraction(dropInteraction)
     }
+
+    func fetchJSONData(searchQuery: String) {
+        fetchJSON.getNetworkCall(searchQuery: searchQuery) { [weak self] (resultsArray: [podcastModelData]) in
+            self?.podcastItems = resultsArray
+            //print(self?.podcastItems)
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
+        }
+    }
+    
+    @objc func handleDetailedViewTapped() {
+        let destinationViewController = DetailedViewController()
+        navigationController?.pushViewController(destinationViewController, animated: true)
+        
+    }
+    
+    
+    deinit {
+        print("Removing FirstVC from the memory heap")
+    }
+   
+    
 }
+
+
 
 extension ViewController: UITableViewDragDelegate {
     
     func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+     
+        let collectionName = podcastItems[indexPath.row].collectionName!
+        let feedUrl = podcastItems[indexPath.row].feedUrl!
+        let artworkurl = podcastItems[indexPath.row].artworkUrl100!
         
-        return model.dragItems(for: indexPath)
+        let podcastItem = podcastModelData(collectionName: collectionName, feedURL: feedUrl, artworkURL100: artworkurl)
+        
+        let itemProvider = NSItemProvider(object: podcastItem)
+        let dragItem = UIDragItem(itemProvider: itemProvider)
+        return [dragItem]
     }
     func tableView(_ tableView: UITableView, itemsForAddingTo session: UIDragSession, at indexPath: IndexPath, point: CGPoint) -> [UIDragItem] {
-        return model.dragItems(for: indexPath)
+        
+        let collectionName = podcastItems[indexPath.row].collectionName!
+        let feedUrl = podcastItems[indexPath.row].feedUrl!
+        let artworkurl = podcastItems[indexPath.row].artworkUrl100!
+        
+        let podcastItem = podcastModelData(collectionName: collectionName, feedURL: feedUrl, artworkURL100: artworkurl)
+        
+        
+        let itemProvider = NSItemProvider(object: podcastItem)
+        let dragItem = UIDragItem(itemProvider: itemProvider)
+        return [dragItem]
     }
    
     func tableView(_ tableView: UITableView, dragSessionAllowsMoveOperation session: UIDragSession) -> Bool {
@@ -126,7 +168,7 @@ extension ViewController: UITableViewDragDelegate {
 
 extension ViewController: UITableViewDropDelegate {
     func tableView(_ tableView: UITableView, canHandle session: UIDropSession) -> Bool {
-        return model.canHandle(session)
+        return session.canLoadObjects(ofClass: podcastModelData.self)
     }
     
     
@@ -157,7 +199,12 @@ extension ViewController: UITableViewDropDelegate {
         for item in coordinator.items {
             if let sourceIndexPath = item.sourceIndexPath {
                 
-                model.moveItem(at: sourceIndexPath.row, to: destinationIndexPath.row)
+                
+                guard sourceIndexPath != destinationIndexPath else { return }
+                
+                let podcastItem = podcastItems[sourceIndexPath.row]
+                podcastItems.remove(at: sourceIndexPath.row)
+                podcastItems.insert(podcastItem, at: destinationIndexPath.row)
                 
                 DispatchQueue.main.async {
                     tableView.beginUpdates()
@@ -165,12 +212,16 @@ extension ViewController: UITableViewDropDelegate {
                     tableView.insertRows(at: [destinationIndexPath], with: .automatic)
                     tableView.endUpdates()
                 }
+                
+                print(podcastItem.collectionName)
+                
             } else {
             
             let itemProvider = item.dragItem.itemProvider
-            itemProvider.loadObject(ofClass: NSString.self) { string, error in
-                if let string = string as? String {
-                    self.model.addItem(string, at: destinationIndexPath.row)
+            itemProvider.loadObject(ofClass: podcastModelData.self) { podcastItem, error in
+                if let podcastItem = podcastItem as? podcastModelData {
+                    self.podcastItems.insert(podcastItem, at: destinationIndexPath.row)
+                  
                     DispatchQueue.main.async {
                         tableView.insertRows(at: [destinationIndexPath], with: .automatic)
                     }
@@ -187,24 +238,23 @@ extension ViewController: UITableViewDropDelegate {
 
 extension ViewController: UIDropInteractionDelegate {
     func dropInteraction(_ interaction: UIDropInteraction, canHandle session: UIDropSession) -> Bool {
-        return session.canLoadObjects(ofClass: NSString.self)
+        return  session.canLoadObjects(ofClass: podcastModelData.self)
     }
     func dropInteraction(_ interaction: UIDropInteraction, sessionDidUpdate session: UIDropSession) -> UIDropProposal {
         return UIDropProposal(operation: .copy)
     }
-    func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
-        // Consume drag items (in this example, of type NSString).
-        
-        session.loadObjects(ofClass: NSString.self) { string in
-            let strings = string as! [NSString]
-            for string in strings {
-                print(string)
-            }
-           
-            self.itemDropped = self.itemDropped + strings.count
-            self.itemsDroppedLabel.text = "\(self.itemDropped)"
-        }
     
+    func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
+        
+        
+        session.loadObjects(ofClass: podcastModelData.self) { (items) in
+            if let podcasts = items as? [podcastModelData] {
+                for item in podcasts {
+                    print(item.collectionName)
+                }
+            }
+        }
+      
     }
     
     
@@ -221,4 +271,48 @@ extension ViewController: UIDropInteractionDelegate {
     
 }
 
+
+extension UIImageView {
+    
+    func loadImageFromURL(url: String) {
+        guard let imageURL = URL(string: url) else { return }
+        
+        DispatchQueue.global().async { [weak self] in
+            if let data = try? Data(contentsOf: imageURL) {
+                if let image = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        self?.image = image
+                    }
+                    
+                }
+            }
+            
+        }
+        
+    }
+    
+    
+    
+}
+
+
+class Service {
+    
+   weak var detailedVC: DetailedViewController?
+}
+
+class DetailedViewController: UIViewController {
+    
+    let service = Service()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+            view.backgroundColor = .red
+    
+        service.detailedVC = self
+    }
+    
+    deinit {
+        print("Removing DetailedVC from the memory heap")
+    }
+}
 

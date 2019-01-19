@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F50283C821F091190078C6B3 /* JSONData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50283C721F091190078C6B3 /* JSONData.swift */; };
 		F50D72E021E8C8FF004FF5E4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50D72DF21E8C8FF004FF5E4 /* AppDelegate.swift */; };
 		F50D72E221E8C8FF004FF5E4 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50D72E121E8C8FF004FF5E4 /* ViewController.swift */; };
 		F50D72E521E8C8FF004FF5E4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F50D72E321E8C8FF004FF5E4 /* Main.storyboard */; };
@@ -16,6 +17,8 @@
 		F50D72F821E8C908004FF5E4 /* TestingDragDropTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50D72F721E8C908004FF5E4 /* TestingDragDropTests.swift */; };
 		F50D730321E8C908004FF5E4 /* TestingDragDropUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50D730221E8C908004FF5E4 /* TestingDragDropUITests.swift */; };
 		F50D731121E8EB3C004FF5E4 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = F50D731021E8EB3C004FF5E4 /* Model.swift */; };
+		F576DCEC21F381580088624D /* podcastCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F576DCEB21F381580088624D /* podcastCellView.swift */; };
+		F5E6917A21F098740089F43A /* PodcastModel .swift in Sources */ = {isa = PBXBuildFile; fileRef = F5E6917921F098740089F43A /* PodcastModel .swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F50283C721F091190078C6B3 /* JSONData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONData.swift; sourceTree = "<group>"; };
 		F50D72DC21E8C8FF004FF5E4 /* TestingDragDrop.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestingDragDrop.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F50D72DF21E8C8FF004FF5E4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F50D72E121E8C8FF004FF5E4 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -51,6 +55,8 @@
 		F50D730221E8C908004FF5E4 /* TestingDragDropUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestingDragDropUITests.swift; sourceTree = "<group>"; };
 		F50D730421E8C908004FF5E4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F50D731021E8EB3C004FF5E4 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		F576DCEB21F381580088624D /* podcastCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = podcastCellView.swift; sourceTree = "<group>"; };
+		F5E6917921F098740089F43A /* PodcastModel .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PodcastModel .swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +109,9 @@
 			children = (
 				F50D72DF21E8C8FF004FF5E4 /* AppDelegate.swift */,
 				F50D72E121E8C8FF004FF5E4 /* ViewController.swift */,
+				F576DCEB21F381580088624D /* podcastCellView.swift */,
+				F50283C721F091190078C6B3 /* JSONData.swift */,
+				F5E6917921F098740089F43A /* PodcastModel .swift */,
 				F50D731021E8EB3C004FF5E4 /* Model.swift */,
 				F50D72E321E8C8FF004FF5E4 /* Main.storyboard */,
 				F50D72E921E8C907004FF5E4 /* Assets.xcassets */,
@@ -264,8 +273,11 @@
 			files = (
 				F50D72E221E8C8FF004FF5E4 /* ViewController.swift in Sources */,
 				F50D72E821E8C8FF004FF5E4 /* TestingDragDrop.xcdatamodeld in Sources */,
+				F50283C821F091190078C6B3 /* JSONData.swift in Sources */,
 				F50D72E021E8C8FF004FF5E4 /* AppDelegate.swift in Sources */,
 				F50D731121E8EB3C004FF5E4 /* Model.swift in Sources */,
+				F576DCEC21F381580088624D /* podcastCellView.swift in Sources */,
+				F5E6917A21F098740089F43A /* PodcastModel .swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
