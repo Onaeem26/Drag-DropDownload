@@ -19,4 +19,4 @@ When creating drag item, we are using item provider which is constructed by usin
 
 Coming up next: 
 - Animations 
-- Switching to next view controller and downloading podcast episode
+- Pushing to next view controller and downloading podcast which is dropped on the 'circleView'
