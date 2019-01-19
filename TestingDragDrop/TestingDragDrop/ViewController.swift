@@ -123,11 +123,18 @@ extension ViewController: UITableViewDragDelegate {
     
     func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
      
-        let collectionName = podcastItems[indexPath.row].collectionName!
-        let feedUrl = podcastItems[indexPath.row].feedUrl!
-        let artworkurl = podcastItems[indexPath.row].artworkUrl100!
+        var collectionName = String()
+        var feedUrl = String()
+        var artworkUrl = String()
         
-        let podcastItem = podcastModelData(collectionName: collectionName, feedURL: feedUrl, artworkURL100: artworkurl)
+        if let cN = podcastItems[indexPath.row].collectionName, let furl = podcastItems[indexPath.row].feedUrl,let artwrk = podcastItems[indexPath.row].artworkUrl100 {
+            collectionName = cN
+            feedUrl = furl
+            artworkUrl = artwrk
+        }
+        
+        
+        let podcastItem = podcastModelData(collectionName: collectionName, feedURL: feedUrl, artworkURL100: artworkUrl)
         
         let itemProvider = NSItemProvider(object: podcastItem)
         let dragItem = UIDragItem(itemProvider: itemProvider)
