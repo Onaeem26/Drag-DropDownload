@@ -112,9 +112,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     
-    deinit {
-        print("Removing FirstVC from the memory heap")
-    }
+    
    
     
 }
@@ -296,23 +294,18 @@ extension UIImageView {
 }
 
 
-class Service {
-    
-   weak var detailedVC: DetailedViewController?
-}
+
 
 class DetailedViewController: UIViewController {
     
-    let service = Service()
+   
     override func viewDidLoad() {
         super.viewDidLoad()
             view.backgroundColor = .red
     
-        service.detailedVC = self
+       
     }
     
-    deinit {
-        print("Removing DetailedVC from the memory heap")
-    }
+   
 }
 
