@@ -16,7 +16,7 @@ When creating drag item, we are using item provider which is constructed by usin
         let podcastItem = PodcastModelData(collectionName: collectionName, feedURL: feedUrl, artworkURL100: artworkurl)
         let itemProvider = NSItemProvider(object: podcastItem)
         let dragItem = UIDragItem(itemProvider: itemProvider)
+- Drop the select podcasts on a custom view which will then take you to a new table view controller and populate the table.
 
 Coming up next: 
 - Animations 
-- Pushing to next view controller and downloading podcast which is dropped on the 'circleView'
