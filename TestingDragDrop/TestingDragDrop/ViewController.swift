@@ -33,6 +33,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         return circle
     }()
     
+    let searchController = UISearchController(searchResultsController: nil)
   
     var model = Model()
     var podcastItems = [podcastModelData]()
@@ -55,6 +56,7 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Downloads", style: .plain, target: self, action: #selector(handleDetailedViewTapped))
         
         setupViews()
+       
         
     }
     
@@ -111,7 +113,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
     }
     
+  
     
+ 
     
    
     
@@ -254,10 +258,11 @@ extension ViewController: UIDropInteractionDelegate {
         
         session.loadObjects(ofClass: podcastModelData.self) { (items) in
             if let podcasts = items as? [podcastModelData] {
-                for item in podcasts {
-                    print(item.collectionName)
-                }
+                let destinationViewController = DetailedViewController()
+                destinationViewController.podcaststobedownloaded = podcasts
+                self.navigationController?.pushViewController(destinationViewController, animated: true)
             }
+            
         }
       
     }
@@ -303,14 +308,34 @@ extension UIImageView {
 
 
 
-class DetailedViewController: UIViewController {
+class DetailedViewController: UITableViewController {
     
-   
+    var podcaststobedownloaded: [podcastModelData] = []
+    let cellid = "cellid"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-            view.backgroundColor = .red
-    
+            view.backgroundColor = .white
+        title = "Download Podcasts"
+       tableView.register(PodcastCellView.self, forCellReuseIdentifier: cellid)
        
+    }
+    
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return podcaststobedownloaded.count
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellid, for: indexPath) as! PodcastCellView
+        cell.podcastName.text = podcaststobedownloaded[indexPath.row].collectionName
+        if let podcastImageURL = podcaststobedownloaded[indexPath.row].artworkUrl100 {
+            cell.podcastImageView.loadImageFromURL(url:podcastImageURL)
+        }
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 124
     }
     
    
